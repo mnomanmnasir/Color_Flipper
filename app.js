@@ -1,95 +1,63 @@
-var list = document.getElementById('list');
+var el = document.getElementById('result');
+var names = [];
+
+function Create() {
+    var el = document.getElementById('name')
+	var name = el.value;
+	if (name) {
+		names.push(name.trim());
+		el.value = '';
+		displayData();
+	}
+	displayData();
+};
+
+function Delete(item) {
+	names.splice(item, 1);
+	displayData();
+	
+};
+
+function Edit(item) {
+	var el = document.getElementById('update_name');
+	el.value = names[item];
+	document.getElementById('edit').style.display = 'inline';
+	document.getElementById('create').style.display = 'none';
+	self = this;
+	
+	document.getElementById('update').onsubmit = function() {
+	var name = el.value;
+		if (name) {
+			self.names.splice(item, 1, name.trim());
+			self.displayData();
+			buttonToggle();
+			document.getElementById('create').style.display = 'inline';
+		}
+	}
+};
 
 
-function isEmpty()
-{
-
-    let todoitem = document.getElementById("todoitem").value;
-    let btn = document.getElementById("btn").value;
-
-    if(todoitem.value != " " && list.value != " ")
-    {
-        document.getElementById("btn").removeAttribute("disabled")
-    }
-
+function buttonToggle() {
+	document.getElementById('edit').style.display = 'none';
+	document.getElementById('create').style.display = 'inline';
 }
 
 
-
-function addTodo()
-
-{
-
-    var todo_item = document.getElementById('todoitem');
-
-
-
-
-
-    var li = document.createElement("li");
-    
-    
-    var liText = document.createTextNode(todo_item.value);
+function displayData() {
+	var data = '';
+	if (names.length > 0) {
+		for (i = 0; i < names.length; i++) {
+			data += '<tr>';
+			data += '<td>' + names[i] + '</td>';
+			data += '<td colspan="2"><center><button class="btn btn-warning" onclick="Edit(' + i + ')"><span class="glyphicon glyphicon-edit"></span> Edit</button> | <button class="btn btn-danger" onclick="Delete(' + i + ')"><span class="glyphicon glyphicon-trash"></span> Delete</button></center></td>';
+			data += '</tr>';
+		}
+	}
+	
+	el.innerHTML = data;
+};
 
 
-    li.appendChild(liText);   
-    
-    var delBtn = document.createElement("button")
-
-    var delText = document.createTextNode("DELETE")
-
-    delBtn.setAttribute("class","Btn")
-    delBtn.setAttribute("onclick","deleteItem(this)") //this pora button console pr dyga 
-    delBtn.appendChild(delText)
-
-    //create edit button
-
-    var editBtn = document.createElement("button")
-    var editText = document.createTextNode("EDIT")
-
-    
-    editBtn.setAttribute("class","Btn")
-    editBtn.appendChild(editText)
-    editBtn.setAttribute("onclick","editItem(this)")
-
-    li.appendChild(editBtn)
-
-
-    
-    li.appendChild(delBtn)
-
-
-
-
-    // console.log(li)
-
-    todo_item.value = " "
-    list.appendChild(li)
-    // console.log(todo_item.value)
-}
-
-
-
-function deleteItem(e)
-{
-
- e.parentNode.remove(); // ye function remove krdeyga item
-
-}
-
-
-function deleteall(){
-    
-    list.innerHTML = " "
-}
-
-
-
-
-function editItem(e){
-
-    var editValue = prompt("Enter edit value",e.parentNode.firstChild.nodeValue);
-    // console.log(e.parentNode.firstChild)
-
-    e.parentNode.firstChild.nodeValue = editValue
-}
+displayData();
+buttonToggle();
+	
